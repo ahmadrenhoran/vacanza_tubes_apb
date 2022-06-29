@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "690423654269",
+    "project_id": "vacanza-tubes-apb",
+    "storage_bucket": "vacanza-tubes-apb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690423654269:android:ea56be4f47314f35e64e14",
+        "android_client_info": {
+          "package_name": "com.shp.vacanza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690423654269-9l7p7rum3mljh6rt5ifi1hlh4mq56kv0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgG3ipxhP8TJVQvZcKajrCVcVMqlhXjGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "690423654269-9l7p7rum3mljh6rt5ifi1hlh4mq56kv0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
