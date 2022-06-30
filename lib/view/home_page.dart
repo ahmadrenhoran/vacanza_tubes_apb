@@ -1,7 +1,8 @@
-
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:vacanza/helper/app_colors.dart';
+import 'package:vacanza/model/destination.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,29 +12,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // late DatabaseReference ref;
-  //
-  // List<Map<dynamic, dynamic>> data = [];
-  // List<String> dataKeys = [];
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   ref = FirebaseDatabase.instance.ref('data');
-  //   ref.onValue.listen((event) {
-  //     final rows = event.snapshot.value as Map;
-  //     List<Map> d = [];
-  //     List<String> k = [];
-  //     rows.forEach((key, value) {
-  //       d.add(value as Map);
-  //       k.add(key);
-  //     });
-  //     setState(() {
-  //       data = d;
-  //       dataKeys = k;
-  //     });
-  //   });
-  // }
+  final List<Destination> list = [];
+
+  initListDestination() async {
+    final snapshot = await FirebaseDatabase.instance.ref('destination').get();
+
+    final map = snapshot.value as Map<dynamic, dynamic>;
+
+    map.forEach((key, value) {
+      final destination = Destination.fromMap(value);
+
+      list.add(destination);
+    });
+  }
+
+  @override
+  void initState() {
+    initListDestination();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: const [
                       Text("Welcome",
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w500)),
@@ -102,82 +99,80 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            // Expanded(
-              // child: ListView.builder(
-              //   physics: BouncingScrollPhysics(),
-              //   itemCount: data.length,
-              //   itemBuilder: (context, index) {
-              //     /* setiap indexnya akan dibuatkan widget DestinationCard yang dibuat terpisah pada file lain dengan mengirimkan
-              //     satu buah objek Destination sesuai yang diminta pada constructor DestinationCard dimana setiap objeknya didapatkan dari
-              //     list destinations dan diambil sesuai indeks yang sedang dijalankan pada ListView.builder*/
-              //     return Center(
-              //         child: Container(
-              //       width: 289,
-              //       height: 231,
-              //       padding: EdgeInsets.all(5),
-              //       margin: EdgeInsets.only(bottom: 22),
-              //       decoration: BoxDecoration(
-              //           borderRadius: BorderRadius.circular(30),
-              //           color: AppColor.white),
-              //       child: Column(
-              //         children: [
-              //           ClipRRect(
-              //             borderRadius: BorderRadius.circular(23),
-              //             child: Image.network(
-              //               data[index]["imageUrl"] ?? '',
-              //               fit: BoxFit.cover,
-              //               width: double.infinity,
-              //               height: 150,
-              //             ),
-              //           ),
-              //           Container(
-              //             margin: EdgeInsets.only(right: 15, left: 15, top: 12),
-              //             child: Row(
-              //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //               crossAxisAlignment: CrossAxisAlignment.center,
-              //               children: [
-              //                 Column(
-              //                   crossAxisAlignment: CrossAxisAlignment.start,
-              //                   children: [
-              //                     Text(data[index]["locationName"] ?? '',
-              //                         overflow: TextOverflow.ellipsis,
-              //                         style: TextStyle(
-              //                             fontSize: 16,
-              //                             fontWeight: FontWeight.w500)),
-              //                     SizedBox(height: 5),
-              //                     Text(data[index]["location"] ?? '',
-              //                         overflow: TextOverflow.ellipsis,
-              //                         style: TextStyle(
-              //                             fontSize: 12,
-              //                             fontWeight: FontWeight.w400,
-              //                             color: AppColor.subtitle))
-              //                   ],
-              //                 ),
-              //                 Container(
-              //                   width: 42,
-              //                   height: 37,
-              //                   decoration: BoxDecoration(
-              //                       borderRadius: BorderRadius.circular(10),
-              //                       color: AppColor.green),
-              //                   child: Center(
-              //                     child: Text(
-              //                       data[index]["price"] ?? '',
-              //                       style: TextStyle(
-              //                           color: AppColor.white,
-              //                           fontSize: 16,
-              //                           fontWeight: FontWeight.w500),
-              //                     ),
-              //                   ),
-              //                 )
-              //               ],
-              //             ),
-              //           )
-              //         ],
-              //       ),
-              //     ));
-              //   },
-              // ),
-            // )
+            Expanded(
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  return Center(
+                    child: Container(
+                  width: 289,
+                  height: 231,
+                  padding: EdgeInsets.all(5),
+                  margin: EdgeInsets.only(bottom: 22),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: AppColor.white),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(23),
+                        child: Image.network(
+                          list[index].imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: 150,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(right: 15, left: 15, top: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    list[index].locationName,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500)),
+                                SizedBox(height: 5),
+                                Text(list[index].location,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColor.subtitle))
+                              ],
+                            ),
+                            Container(
+                              width: 42,
+                              height: 37,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: AppColor.green),
+                              child: Center(
+                                child: Text(
+                                 list[index].price.toString(),
+                                  style: TextStyle(
+                                      color: AppColor.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ));
+              },
+            ),
+            )
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "690423654269",
+    "firebase_url": "https://vacanza-tubes-apb-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "vacanza-tubes-apb",
     "storage_bucket": "vacanza-tubes-apb.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "690423654269-9l7p7rum3mljh6rt5ifi1hlh4mq56kv0.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "690423654269-tie1i201lqucdjko578k9nvokakbjr09.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shp.vacanza"
+              }
             }
           ]
         }

@@ -138,14 +138,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 });
 
                                 if (user != null) {
-                                  Navigator.of(context)
-                                      .pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          LoginPage(),
-                                    ),
-                                    ModalRoute.withName('/'),
-                                  );
+                                  Navigator.of(context).pop(context);
                                 }
                               } else {
                                 setState(() {

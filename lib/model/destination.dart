@@ -11,6 +11,15 @@ class Destination {
       required this.location,
       required this.price,
       required this.imageUrl});
+
+  factory Destination.fromMap(Map<dynamic, dynamic> map) {
+    return Destination(
+      imageUrl: map['imageUrl'] ?? '',
+      location: map['location'] ?? '',
+      locationName: map['locationName'] ?? '',
+      price: map['price'] ?? 0,
+    );
+  }
 }
 
  

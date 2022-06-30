@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:690423654269:android:ea56be4f47314f35e64e14',
     messagingSenderId: '690423654269',
     projectId: 'vacanza-tubes-apb',
+    databaseURL: 'https://vacanza-tubes-apb-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'vacanza-tubes-apb.appspot.com',
   );
 
@@ -62,6 +63,7 @@ class DefaultFirebaseOptions {
     appId: '1:690423654269:ios:8e4d265fe1125e5be64e14',
     messagingSenderId: '690423654269',
     projectId: 'vacanza-tubes-apb',
+    databaseURL: 'https://vacanza-tubes-apb-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'vacanza-tubes-apb.appspot.com',
     iosClientId: '690423654269-tie1i201lqucdjko578k9nvokakbjr09.apps.googleusercontent.com',
     iosBundleId: 'com.shp.vacanza',
