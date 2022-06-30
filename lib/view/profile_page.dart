@@ -1,12 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:vacanza/helper/app_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  User? user = null;
+
+  void _initUser() async {
+    FirebaseApp firebaseApp = await Firebase.initializeApp();
+
+    user = FirebaseAuth.instance.currentUser;
+  }
+
+  Future<FirebaseApp> _initializeFirebase() async {
+    FirebaseApp firebaseApp = await Firebase.initializeApp();
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {}
+
+    return firebaseApp;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initUser();
+  }
+
+  @override
   Widget build(BuildContext context) {
-     
     return Scaffold(
         backgroundColor: AppColor.background,
         appBar: AppBar(
@@ -36,12 +67,6 @@ class ProfileScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 28.0, top: 7),
                     child: Stack(
                       children: <Widget>[
-                         
-                         
-                         
-                         
-                         
-                         
                         ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Image.network(
@@ -73,14 +98,9 @@ class ProfileScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Lukman",
+                            user?.displayName ?? '',
                             style: TextStyle(fontSize: 25),
                           ),
-                          Text(
-                            "Nurahman",
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          )
                         ],
                       )),
                 ],
@@ -154,3 +174,7 @@ class ProfileScreen extends StatelessWidget {
         ));
   }
 }
+
+
+
+
