@@ -11,30 +11,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  User? user = null;
-
-  void _initUser() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-
-    user = FirebaseAuth.instance.currentUser;
-  }
-
-  Future<FirebaseApp> _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {}
-
-    return firebaseApp;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _initUser();
-  }
+  User? user =  FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
