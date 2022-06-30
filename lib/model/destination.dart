@@ -2,7 +2,7 @@
 class Destination {
   final String locationName;  
   final String location;  
-  final int price;  
+  final String price;
   final String imageUrl;  
 
    

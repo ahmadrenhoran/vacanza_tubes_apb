@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vacanza/helper/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -12,6 +11,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   User? user =  FirebaseAuth.instance.currentUser;
+
 
   @override
   Widget build(BuildContext context) {
