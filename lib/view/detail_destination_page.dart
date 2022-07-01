@@ -1,29 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:vacanza/model/destination.dart';
 
-class DetailDestionatioScreen extends StatelessWidget {
-  const DetailDestionatioScreen({Key? key}) : super(key: key);
+import '../helper/app_colors.dart';
+
+class DetailDestinationScreen extends StatefulWidget {
+  Destination destination;
+
+  DetailDestinationScreen({required this.destination});
+
+  @override
+  State<DetailDestinationScreen> createState() =>
+      _DetailDestinationScreenState();
+}
+
+class _DetailDestinationScreenState extends State<DetailDestinationScreen> {
+  late Destination destination;
+  int _weekend = 1;
+  int _weekday = 1;
+  late GoogleMapController mapController;
+  late List<Marker> _markers = [];
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+    setState(() {
+      _markers.add(
+        Marker(
+            markerId: MarkerId(destination.price),
+            position: LatLng(destination.latitude, destination.longitude),
+            infoWindow: InfoWindow(title: destination.locationName)),
+      );
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    destination = widget.destination;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white70,
+        backgroundColor: AppColor.background,
         appBar: AppBar(
-          title: Text(
-            "Detail Destination",
-            style: TextStyle(
-                fontSize: 25, fontWeight: FontWeight.bold, color: Colors.green),
-          ),
-          elevation: 0,
-          backgroundColor: Color.fromARGB(179, 148, 145, 145),
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.place, color: Colors.green, size: 30),
-            )
-          ],
-        ),
+            iconTheme: const IconThemeData(
+              color: Colors.black, //change your color here
+            ),
+            title: Text(
+              destination.locationName,
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            elevation: 2,
+            backgroundColor: AppColor.background),
         body: ListView(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           children: [
             Column(
               children: [
@@ -38,7 +72,7 @@ class DetailDestionatioScreen extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(32),
                             child: Image.network(
-                              "https://travelspromo.com/wp-content/uploads/2018/07/Oc-Forest-Sky-Bridge.jpg",
+                              destination.imageUrl,
                               fit: BoxFit.fill,
                               width: double.infinity,
                               height: MediaQuery.of(context).size.height * 0.3,
@@ -50,22 +84,27 @@ class DetailDestionatioScreen extends StatelessWidget {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
+                                      SizedBox(
+                                        height: 20.0,
+                                      ),
                                       Container(
-                                        margin: EdgeInsets.only(
-                                            left: 20, right: 8, top: 12),
+                                        margin: EdgeInsets.only(left: 20.0),
                                         child: Text(
-                                          "Orchid forest cikole",
+                                          destination.locationName,
+                                          textAlign: TextAlign.start,
                                           style: TextStyle(fontSize: 20),
                                         ),
                                       ),
                                       Container(
-                                        margin:
-                                            EdgeInsets.only(right: 40, top: 6),
+                                        margin: EdgeInsets.only(left: 20.0),
                                         child: Text(
-                                          "Lembang Bandung",
+                                          destination.location,
                                           textAlign: TextAlign.start,
                                           style: TextStyle(color: Colors.grey),
                                         ),
@@ -84,7 +123,7 @@ class DetailDestionatioScreen extends StatelessWidget {
                                           right: 14,
                                           top: 8,
                                           bottom: 8),
-                                      child: Text('2\$',
+                                      child: Text('${destination.price}\$',
                                           style: TextStyle(
                                               fontSize: 16,
                                               color: Colors.white)),
@@ -99,7 +138,7 @@ class DetailDestionatioScreen extends StatelessWidget {
                                       margin: EdgeInsets.only(
                                           left: 21, top: 12, bottom: 8),
                                       child: Text(
-                                        'Terletak di Cikole, Lembang, Kabupaten Bandung Barat, Orchid Forest Cikole adalah sebuah tempat wisata di tengah Hutan Pinus yang asri, di mana ribuan jenis anggrek dikembangkan dan dilestarikan!',
+                                        destination.description,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 12,
                                         style: TextStyle(
@@ -116,7 +155,7 @@ class DetailDestionatioScreen extends StatelessWidget {
                 )
               ],
             ),
-            Text(
+            const Text(
               'Ticket',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             ),
@@ -132,7 +171,7 @@ class DetailDestionatioScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20, top: 12),
                         child: Text(
-                          "Orchid forest cikole weekdays",
+                          "${destination.locationName} weekdays",
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -140,7 +179,8 @@ class DetailDestionatioScreen extends StatelessWidget {
                     Container(
                       child: Padding(
                         padding: EdgeInsets.only(left: 20, top: 4, bottom: 8),
-                        child: Text('Price : 2\$'),
+                        child: Text(
+                            'Price : ${int.parse(destination.price) * _weekday}\$'),
                       ),
                     ),
                     Row(
@@ -176,11 +216,15 @@ class DetailDestionatioScreen extends StatelessWidget {
                                       size: 14.0,
                                       color: Colors.white,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _weekday++;
+                                      });
+                                    },
                                   )),
                             ),
                             Text(
-                              "1",
+                              "$_weekday",
                               style: TextStyle(fontWeight: FontWeight.w700),
                             ),
                             Card(
@@ -197,7 +241,11 @@ class DetailDestionatioScreen extends StatelessWidget {
                                       size: 14.0,
                                       color: Colors.white,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _weekday--;
+                                      });
+                                    },
                                   )),
                             )
                           ],
@@ -218,7 +266,7 @@ class DetailDestionatioScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20, top: 12),
                         child: Text(
-                          "Orchid forest cikole weekends",
+                          "${destination.locationName} weekends",
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -226,7 +274,8 @@ class DetailDestionatioScreen extends StatelessWidget {
                     Container(
                       child: Padding(
                         padding: EdgeInsets.only(left: 20, top: 4, bottom: 8),
-                        child: Text('Price : 2\$'),
+                        child: Text(
+                            'Price : ${int.parse(destination.price) * _weekend}\$'),
                       ),
                     ),
                     Row(
@@ -262,11 +311,15 @@ class DetailDestionatioScreen extends StatelessWidget {
                                       size: 14.0,
                                       color: Colors.white,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _weekend++;
+                                      });
+                                    },
                                   )),
                             ),
                             Text(
-                              "1",
+                              "$_weekend",
                               style: TextStyle(fontWeight: FontWeight.w700),
                             ),
                             Card(
@@ -283,7 +336,11 @@ class DetailDestionatioScreen extends StatelessWidget {
                                       size: 14.0,
                                       color: Colors.white,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _weekend--;
+                                      });
+                                    },
                                   )),
                             )
                           ],
@@ -292,6 +349,28 @@ class DetailDestionatioScreen extends StatelessWidget {
                     )
                   ],
                 )),
+            const Text(
+              'Google maps view',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(26)),
+              margin: EdgeInsets.only(left: 8, right: 8, bottom: 12, top: 12),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(26),
+                child: Container(
+                  height: 400.0,
+                  width: double.infinity,
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                        target: LatLng(destination.latitude, destination.longitude), zoom: 11.0),
+                    onMapCreated: _onMapCreated,
+                    markers: Set<Marker>.of(_markers),
+                  ),
+                ),
+              ),
+            ),
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -301,7 +380,7 @@ class DetailDestionatioScreen extends StatelessWidget {
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0)),
-                  minimumSize: Size(150, 40),  
+                  minimumSize: Size(150, 40),
                 ),
                 onPressed: () {},
                 child: Text(

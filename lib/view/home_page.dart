@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const DetailDestionatioScreen(),
+                                    DetailDestinationScreen(destination: list![index],),
                               ),
                             );
                           },
@@ -198,9 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     );
                   } else {
-                    return const CircularProgressIndicator(
-                      value: 10.0,
-                    );
+                    return const CircularProgressIndicator();
                   }
                 },
               ),

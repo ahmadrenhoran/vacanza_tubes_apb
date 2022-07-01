@@ -81,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: <Widget>[
                           Text(
                             user?.displayName ?? '',
-                            style: TextStyle(fontSize: 25),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ],
                       )),
@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            "Email",
+                            user?.email ?? '',
                           ),
                           ElevatedButton(
                             onPressed: () {},
