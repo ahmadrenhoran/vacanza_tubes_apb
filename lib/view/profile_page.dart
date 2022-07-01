@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vacanza/helper/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -11,7 +14,16 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   User? user =  FirebaseAuth.instance.currentUser;
+  File? _image;
+  Future getImage(ImageSource source) async{
+    final image = await ImagePicker().pickImage(source: source);
+    if(image == null) return;
+    final imageTemporary = File(image.path);
 
+    setState(() {
+      this._image = imageTemporary;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,26 +58,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: <Widget>[
                         ClipRRect(
                           borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
+                          child: _image != null
+                            ?Image.file(
+                            _image!,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          )
+                          : Image.network(
                             "https://s-light.tiket.photos/t/01E25EBZS3W0FY9GTG6C42E1SE/rsfit19201280gsm/events/2021/06/25/19684f9d-27c1-402f-8402-fc850c0f7c73-1624599423067-8fcd2f0c7970d4bbd80d36b647c33bad.jpg",
                             fit: BoxFit.cover,
                             height: 50,
                           ),
                         ),
-                        Positioned(
-                            bottom: 1,
-                            right: 1,
-                            child: Container(
-                              height: 30,
-                              width: 30,
-                              child: Icon(
-                                Icons.add_a_photo,
-                                color: Colors.white,
-                              ),
-                              decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(30)),
-                            ))
                       ],
                     ),
                   ),
@@ -146,12 +151,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       border: Border.all(width: 1.0, color: Colors.grey)),
                 ),
               ),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 4),
+                child: Column(children: [
+                  SizedBox(height: 40),
+                  CustomButton(
+                      title: 'pick from gallery',
+                      icon: Icons.image_outlined,
+                      onClick: ()=> getImage(ImageSource.gallery),
+                  ),
+                  CustomButton(
+                      title: 'pick from camera',
+                      icon: Icons.camera,
+                      onClick: ()=>getImage(ImageSource.camera),
+                  ),
+                ],
+                ),
+
+
+
+              )
             ],
           ),
         ));
   }
 }
 
-
+Widget CustomButton({
+  required String title,
+  required IconData icon,
+  required VoidCallback onClick,
+}) {
+  return Container(
+    width: 280,
+    child: ElevatedButton(
+      onPressed: onClick,
+      child: Row(
+        children: [
+          Icon(icon),
+          Text(title)
+        ],),),
+  );
+}
 
 
