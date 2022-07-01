@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vacanza/model/destination.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../helper/app_colors.dart';
 
@@ -20,6 +21,7 @@ class _DetailDestinationScreenState extends State<DetailDestinationScreen> {
   int _weekday = 1;
   late GoogleMapController mapController;
   late List<Marker> _markers = [];
+  late YoutubePlayerController _controller;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -37,6 +39,22 @@ class _DetailDestinationScreenState extends State<DetailDestinationScreen> {
   void initState() {
     super.initState();
     destination = widget.destination;
+    String? youtubeUrl = YoutubePlayer.convertUrlToId(destination.youtubeUrl);
+    _controller = YoutubePlayerController(
+      initialVideoId:
+          youtubeUrl ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      flags: YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+
+      ),
+    );
+  }
+
+  @override
+  void deactivate() {
+    _controller.pause();
+    super.deactivate();
   }
 
   @override
@@ -350,6 +368,16 @@ class _DetailDestinationScreenState extends State<DetailDestinationScreen> {
                   ],
                 )),
             const Text(
+              'Video preview',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
+            YoutubePlayer(
+              controller: _controller,
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: AppColor.green,
+            ),
+            SizedBox(height: 20,),
+            const Text(
               'Google maps view',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             ),
@@ -364,7 +392,9 @@ class _DetailDestinationScreenState extends State<DetailDestinationScreen> {
                   width: double.infinity,
                   child: GoogleMap(
                     initialCameraPosition: CameraPosition(
-                        target: LatLng(destination.latitude, destination.longitude), zoom: 11.0),
+                        target:
+                            LatLng(destination.latitude, destination.longitude),
+                        zoom: 11.0),
                     onMapCreated: _onMapCreated,
                     markers: Set<Marker>.of(_markers),
                   ),

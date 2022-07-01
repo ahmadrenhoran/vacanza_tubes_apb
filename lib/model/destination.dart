@@ -5,6 +5,7 @@ class Destination {
   final double longitude;
   final String price;
   final String imageUrl;
+  final String youtubeUrl;
   final String description;
 
   Destination({
@@ -14,12 +15,14 @@ class Destination {
     required this.longitude,
     required this.price,
     required this.imageUrl,
+    required this.youtubeUrl,
     required this.description,
   });
 
   factory Destination.fromMap(Map<dynamic, dynamic> map) {
     return Destination(
       imageUrl: map['imageUrl'] ?? '',
+      youtubeUrl: map['youtubeUrl'] ?? '',
       location: map['location'] ?? '',
       locationName: map['locationName'] ?? '',
       latitude: map['latitude'] ?? 0,
