@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vacanza/helper/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -12,18 +14,44 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
+const IMAGE_KEY = 'IMAGE_KEY';
+
 class _ProfileScreenState extends State<ProfileScreen> {
   User? user =  FirebaseAuth.instance.currentUser;
   File? _image;
   Future getImage(ImageSource source) async{
     final image = await ImagePicker().pickImage(source: source);
     if(image == null) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(IMAGE_KEY, image.path);
     final imageTemporary = File(image.path);
 
     setState(() {
       this._image = imageTemporary;
     });
   }
+
+  loadImageFromPrefs() async {
+
+    final prefs = await SharedPreferences.getInstance();
+    final String? imagePath = prefs.getString(IMAGE_KEY);
+
+    if (imagePath != null) {
+      final imageTemporary = File(imagePath);
+      setState (() {
+        this._image = imageTemporary;
+
+      });
+    }
+
+  }
+
+  @override
+  void initState()  {
+    super.initState();
+    loadImageFromPrefs();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +87,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: _image != null
-                            ?Image.file(
+                              ?Image.file(
                             _image!,
                             width: 50,
                             height: 50,
                             fit: BoxFit.cover,
                           )
-                          : Image.network(
+                              : Image.network(
                             "https://s-light.tiket.photos/t/01E25EBZS3W0FY9GTG6C42E1SE/rsfit19201280gsm/events/2021/06/25/19684f9d-27c1-402f-8402-fc850c0f7c73-1624599423067-8fcd2f0c7970d4bbd80d36b647c33bad.jpg",
                             fit: BoxFit.cover,
                             height: 50,
@@ -152,18 +180,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 4),
+                padding: const EdgeInsets.fromLTRB(20, 25, 20, 4),
                 child: Column(children: [
                   SizedBox(height: 40),
                   CustomButton(
-                      title: 'pick from gallery',
-                      icon: Icons.image_outlined,
-                      onClick: ()=> getImage(ImageSource.gallery),
+                    title: 'pick from gallery',
+                    icon: Icons.image_outlined,
+                    onClick: ()=> getImage(ImageSource.gallery),
                   ),
                   CustomButton(
-                      title: 'pick from camera',
-                      icon: Icons.camera,
-                      onClick: ()=>getImage(ImageSource.camera),
+                    title: 'pick from camera',
+                    icon: Icons.camera,
+                    onClick: ()=>getImage(ImageSource.camera),
                   ),
                 ],
                 ),
@@ -193,5 +221,3 @@ Widget CustomButton({
         ],),),
   );
 }
-
-

@@ -22,6 +22,7 @@ dependencies:
   form_field_validator: ^1.1.0
   google_maps_flutter: ^2.1.8
   youtube_player_flutter: ^8.1.0
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
