@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vacanza/helper/app_colors.dart';
 import 'package:vacanza/model/destination.dart';
 import 'package:vacanza/view/detail_destination_page.dart';
+import 'package:vacanza/view/profile_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,6 +19,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   User? user = FirebaseAuth.instance.currentUser;
+  File? _image;
+
+  _loadImageFromPrefs() async {
+
+    final prefs = await SharedPreferences.getInstance();
+    final String? imagePath = prefs.getString(IMAGE_KEY);
+
+    if (imagePath != null) {
+      final imageTemporary = File(imagePath);
+      setState (() {
+        this._image = imageTemporary;
+
+      });
+    }
+
+  }
+
+  @override
+  void initState()  {
+    super.initState();
+    _loadImageFromPrefs();
+  }
 
   Future<List<Destination>> initListDestination() async {
     final snapshot = await FirebaseDatabase.instance.ref('destination').get();
@@ -31,10 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return list;
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +84,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50),
-                    child: Image.network(
-                      "https://thumbs.dreamstime.com/b/businessman-icon-vector-male-avatar-profile-image-profile-businessman-icon-vector-male-avatar-profile-image-182095609.jpg",
+                    child: _image != null
+                        ?Image.file(
+                      _image!,
+                      width: 50,
+                      height: 50,
                       fit: BoxFit.cover,
-                      height: 32,
-                      width: 32,
+                    )
+                        : Image.network(
+                        "https://thumbs.dreamstime.com/b/businessman-icon-vector-male-avatar-profile-image-profile-businessman-icon-vector-male-avatar-profile-image-182095609.jpg",
+                      fit: BoxFit.cover,
+                      height: 50,
                     ),
                   )
                 ],

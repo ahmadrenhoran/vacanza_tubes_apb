@@ -31,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  loadImageFromPrefs() async {
+  _loadImageFromPrefs() async {
 
     final prefs = await SharedPreferences.getInstance();
     final String? imagePath = prefs.getString(IMAGE_KEY);
@@ -49,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState()  {
     super.initState();
-    loadImageFromPrefs();
+    _loadImageFromPrefs();
   }
 
 
